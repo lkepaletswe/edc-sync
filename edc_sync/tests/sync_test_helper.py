@@ -1,5 +1,4 @@
 import json
-
 from unittest.case import TestCase
 from django.apps import apps as django_apps
 from django.core.exceptions import MultipleObjectsReturned
@@ -78,7 +77,7 @@ class SyncTestHelper(TestCase):
             })
         self.sync_test_natural_keys(complete_required_crfs)
 
-    def sync_test_serializers_for_visit(self, complete_required_crfs, verbose=None):
+    def sync_test_serializers_for_visit(self, complete_required_crfs):
         """Assert CRF model instances have transactions and that the
         transactions can be deserialized and compared to their original
         model instances.
@@ -90,12 +89,12 @@ class SyncTestHelper(TestCase):
                         tx_name=obj._meta.label_lower,
                         tx_pk=obj.pk)
                     self.sync_test_deserialize(
-                        obj, outgoing_transaction, verbose=verbose)
+                        obj, outgoing_transaction)
                 except MultipleObjectsReturned:
                     for outgoing_transaction in OutgoingTransaction.objects.filter(
                             tx_name=obj._meta.label_lower, tx_pk=obj.pk):
                         self.sync_test_deserialize(
-                            obj, outgoing_transaction, verbose=verbose)
+                            obj, outgoing_transaction)
                 except OutgoingTransaction.DoesNotExist:
                     self.fail('OutgoingTransaction.DoesNotExist unexpectedly '
                               f'raised for {obj._meta.label_lower}')
@@ -109,3 +108,4 @@ class SyncTestHelper(TestCase):
             self.assertEqual(json_tx.get('model'), obj._meta.label_lower)
             # TODO: verify natural key values?
             self.assertEqual(obj.pk, deserialised_obj.object.pk)
+
