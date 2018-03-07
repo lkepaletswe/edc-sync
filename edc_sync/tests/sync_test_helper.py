@@ -108,4 +108,3 @@ class SyncTestHelper(TestCase):
             self.assertEqual(json_tx.get('model'), obj._meta.label_lower)
             # TODO: verify natural key values?
             self.assertEqual(obj.pk, deserialised_obj.object.pk)
-
